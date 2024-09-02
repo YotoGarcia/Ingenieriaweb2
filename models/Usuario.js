@@ -1,6 +1,6 @@
 const {Schema, model } = require('mongoose');
 
-const usuarioShema = new Schema({
+const usuarioSchema = new Schema({
     nombre: {type: String, required:true},
     email: {type: String, required:true, unique: true},
     estado: {type: String, required:true, enum: ['Activo', 'Inactivo']},
@@ -8,4 +8,5 @@ const usuarioShema = new Schema({
     fechaActualizacion: {type: Date, default: Date.now}
 });
 
-module.exports = model('Usuario', usuarioShema);
+
+module.exports = model('Usuario', usuarioSchema);
