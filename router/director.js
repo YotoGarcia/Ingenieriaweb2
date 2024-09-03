@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const director = require('../models/Director');
 const { check, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
-const Director = require('../models/Director');
+const Director = require('../models/Director.js');
 
 
 //Metodo llamar
@@ -48,31 +47,47 @@ router.post('/', [
 
 //Metodo actualizar
 
-router.put('/:id', [
+router.put('/:directorId', [
     check('nombre', 'Nombre es requerido').not().isEmpty(),
     check('estado', 'Estado inválido').isIn(['Activo', 'Inactivo']),
 ], async function(req, res) {
     try {
    
-        const { id } = req.params;
-        const errors = validationResult(req);
-        if(!errors.isEmpty()){
-            return res.status(400).json({errores: errors.array()});
+        if (!mongoose.Types.ObjectId.isValid(req.params.directorId)) {
+            return res.status(400).send('ID de director no válido');
         }
 
-        const directorActualizado = await Director.findByIdAndUpdate(id, req.body, {new: true})
-        if(!directorActualizado){
-            return res.status(400).send("Director no encotrado");
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ mensaje: errors.array() });
         }
-        res.status(200).json(directorActualizado);
+
+        let director = await Director.findById(req.params.directorId);
+        if (!director) {
+            return res.status(404).send('Director no existe');
+        }
+
+        const { nombre, estado } = req.body;
+
+        if (!nombre) {
+            return res.status(400).send('El campo nombre es obligatorio');
+        }
+
+        director.nombre = nombre;
+        director.estado = estado;
+        director.fechaActualizacion = new Date();
+
+
+        const directorActualizado = await director.save();
+        res.send(directorActualizado);
 
     } catch (error) {
         console.log(error);
-        res.status(500).send('Ocurrió un error al actualizar el director');
+        res.status(500).send('Ocurrió un error al actualizar el Director');
     }
 });
 
-//Eliminar director
+//Metodo eliminar
 
  router.delete('/:id', async function (req, res) {
     try{
