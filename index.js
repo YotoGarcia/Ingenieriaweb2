@@ -13,6 +13,7 @@ getConection();
 app.use(express.json());
 
 app.use('/usuario', require ('./router/user'));
+app.use('/director', require ('./router/director'));
 
 app.listen(port, () =>{
     console.log(`listening on port ${port}`)
