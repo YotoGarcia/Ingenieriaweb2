@@ -1,9 +1,5 @@
 const {Schema, model } = require('mongoose');
 
-const Genero = require('./Genero');
-const Director = require('./Director');
-const Productora = require('./Productora');
-const Tipo = require('./Tipo');
 
 
 const mediaSchema = new Schema({
