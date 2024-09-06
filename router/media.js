@@ -1,7 +1,6 @@
 const {Router} = require('express');
 const Media = require ('../models/Media.js');
 const {validationResult, check} = require('express-validator');
-const { resolveObjectURL } = require('buffer');
 
 const router = Router();
 
@@ -81,10 +80,10 @@ router.post('/',[
 
 //Metodo actualizar
 
-router.put('/:inventarioId',[
+router.put('/:mediaId',[
     check('serial', 'Nombre es requerido').not().isEmpty(),
-    check('titulo', 'Nombre es requerido').not().isEmpty(),
-    check('sipnosis', 'Nombre es requerido').not().isEmpty(),
+    check('titulo', 'Titulo es requerido').not().isEmpty(),
+    check('sipnosis', 'Sipnosis es requerido').not().isEmpty(),
     check('url', 'Nombre es requerido').not().isEmpty(),
     check('genero', 'Genero es requerido').not().isEmpty(),
     check('director', 'Director es requerido').not().isEmpty(),
@@ -101,12 +100,12 @@ router.put('/:inventarioId',[
 
         }
 
-        let media =await Media.findById(req.params.media);
+        let media =await Media.findById(req.params.mediaId);
         if(!media){
             return res.status(400).send('Media no existe')
         }
 
-        const existeMediaPorSerial = await Media.findOne({serial: req.body.serial});
+        const existeMediaPorSerial = await Media.findOne({serial: req.body.serial, id: { $ne: media._id}});
         if(existeMediaPorSerial){
             return res.status(400).send("Ya existe este serial");
         }
@@ -134,20 +133,20 @@ router.put('/:inventarioId',[
 
 //Metodo Eliminar 
 
- /*router.delete('/:id', async function (req, res) {
+ router.delete('/:id', async function (req, res) {
     try{
         const {id} = req.params;
 
-        const generoEliminado = await Genero.findByIdAndDelete(id);
+        const mediaEliminado = await Media.findByIdAndDelete(id);
 
-        if (!generoEliminado){
-            return res.status(404).send('Género no encontrado');
+        if (!mediaEliminado){
+            return res.status(404).send('Media no encontrado');
         }
 
-        res.send('Género eliminado exitosamente');
+        res.send('Media eliminado exitosamente');
     } catch (error){
-        res.sendStatus(500).send('Ocuarrio un error al eliminar al Genero');
+        res.sendStatus(500).send('Ocurrio un error al eliminar Media');
     }
- })*/
+ });
 
 module.exports = router;
