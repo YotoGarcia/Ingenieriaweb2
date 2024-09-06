@@ -9,7 +9,20 @@ const router = Router();
 
 router.get('/', async function(req, res){
     try{
-        const media = await Media.find();
+        const media = await Media.find().populate([
+            {
+                path:'director', select: 'nombre estado'
+            },
+            {
+                path:'genero', select: 'nombre estado'
+            },
+            {
+                path: 'productora', select: 'nombre estado'
+            },
+            {
+                path: 'tipo', select: 'nombre descripcion'
+            }
+        ]);
         res.status(200).json(media);
     } catch(error){
         console.log('Error al obtener Media', error);
@@ -68,49 +81,60 @@ router.post('/',[
 
 //Metodo actualizar
 
-/*router.put('/:generoId', [
-    check('nombre', 'Nombre es requerido').not().isEmpty(),
-    check('estado', 'Estado inválido').isIn(['Activo', 'Inactivo']),
+router.put('/:inventarioId',[
+    check('serial', 'Nombre es requerido').not().isEmpty(),
+    check('titulo', 'Nombre es requerido').not().isEmpty(),
+    check('sipnosis', 'Nombre es requerido').not().isEmpty(),
+    check('url', 'Nombre es requerido').not().isEmpty(),
+    check('genero', 'Genero es requerido').not().isEmpty(),
+    check('director', 'Director es requerido').not().isEmpty(),
+    check('productora', 'Productora es requerido').not().isEmpty(),
+    check('tipo', 'Tipo es requerido').not().isEmpty(),
+
+
 ], async function(req, res) {
     try {
-   
-        if (!mongoose.Types.ObjectId.isValid(req.params.generoId)) {
-            return res.status(400).send('ID de Género no válido');
-        }
 
         const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ mensaje: errors.array() });
+        if(!errors.isEmpty()){
+            return res.status(400).json({mensaje: errors.array()})
+
         }
 
-        let genero = await Genero.findById(req.params.generoId);
-        if (!genero) {
-            return res.status(404).send('Género no existe');
+        let media =await Media.findById(req.params.media);
+        if(!media){
+            return res.status(400).send('Media no existe')
         }
 
-        const { nombre, estado } = req.body;
-
-        if (!nombre) {
-            return res.status(400).send('El campo nombre es obligatorio');
+        const existeMediaPorSerial = await Media.findOne({serial: req.body.serial});
+        if(existeMediaPorSerial){
+            return res.status(400).send("Ya existe este serial");
         }
 
-        genero.nombre = nombre;
-        genero.estado = estado;
-        genero.fechaActualizacion = new Date();
+        media.serial = req.body.serial;
+        media.titulo = req.body.titulo;
+        media.sipnosis = req.body.sipnosis;
+        media.url = req.body.url;
+        media.genero = req.body.genero._id;
+        media.director = req.body.director._id;
+        media.productora = req.body.productora._id;
+        media.tipo = req.body.tipo._id;
+        media.fechaActualizacion = new Date();
 
+        
+        media = await media.save();
+        res.send(media);
 
-        const generoActualizado = await genero.save();
-        res.send(generoActualizado);
-
-    } catch (error) {
+    } catch(error){
         console.log(error);
-        res.status(500).send('Ocurrió un error al actualizar el Género');
+        res.status(500).send('Ocurrio un error al actualizar Media')
     }
+    
 });
 
 //Metodo Eliminar 
 
- router.delete('/:id', async function (req, res) {
+ /*router.delete('/:id', async function (req, res) {
     try{
         const {id} = req.params;
 
