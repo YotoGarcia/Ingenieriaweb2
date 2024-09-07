@@ -32,10 +32,11 @@ router.get('/', async function(req, res){
 //Metodo crear
 
 router.post('/',[
-    check('serial', 'Nombre es requerido').not().isEmpty(),
-    check('titulo', 'Nombre es requerido').not().isEmpty(),
-    check('sipnosis', 'Nombre es requerido').not().isEmpty(),
-    check('url', 'Nombre es requerido').not().isEmpty(),
+    check('serial', 'Serial es requerido').not().isEmpty(),
+    check('titulo', 'TItulo es requerido').not().isEmpty(),
+    check('sinopsis', 'sinopsis es requerido').not().isEmpty(),
+    check('url', 'Url es requerido').not().isEmpty(),
+    check('imagen', 'Imagen es requerido').not().isEmpty(),
     check('genero', 'Genero es requerido').not().isEmpty(),
     check('director', 'Director es requerido').not().isEmpty(),
     check('productora', 'Productora es requerido').not().isEmpty(),
@@ -58,8 +59,9 @@ router.post('/',[
         let media = new Media();
         media.serial = req.body.serial;
         media.titulo = req.body.titulo;
-        media.sipnosis = req.body.sipnosis;
+        media.sinopsis = req.body.sinopsis;
         media.url = req.body.url;
+        media.imagen = req.body.imagen;
         media.genero = req.body.genero._id;
         media.director = req.body.director._id;
         media.productora = req.body.productora._id;
@@ -83,8 +85,9 @@ router.post('/',[
 router.put('/:mediaId',[
     check('serial', 'Nombre es requerido').not().isEmpty(),
     check('titulo', 'Titulo es requerido').not().isEmpty(),
-    check('sipnosis', 'Sipnosis es requerido').not().isEmpty(),
+    check('sinopsis', 'sinopsis es requerido').not().isEmpty(),
     check('url', 'Nombre es requerido').not().isEmpty(),
+    check('imagen', 'Imagen es requerido').not().isEmpty(),
     check('genero', 'Genero es requerido').not().isEmpty(),
     check('director', 'Director es requerido').not().isEmpty(),
     check('productora', 'Productora es requerido').not().isEmpty(),
@@ -112,8 +115,9 @@ router.put('/:mediaId',[
 
         media.serial = req.body.serial;
         media.titulo = req.body.titulo;
-        media.sipnosis = req.body.sipnosis;
+        media.sinopsis = req.body.sinopsis;
         media.url = req.body.url;
+        media.imagen = req.body.imagen;
         media.genero = req.body.genero._id;
         media.director = req.body.director._id;
         media.productora = req.body.productora._id;

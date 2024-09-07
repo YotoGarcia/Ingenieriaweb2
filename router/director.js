@@ -13,7 +13,7 @@ router.get('/', async function(req, res){
         res.status(200).json(director);
     } catch(error){
         console.log('Error al obtener directores', error);
-        res.status(500).send('ocuarrio un error')
+        res.status(500).send('ocurrio un error')
     }
 });
 
@@ -21,7 +21,7 @@ router.get('/', async function(req, res){
 
 router.post('/', [
     check('nombre', 'Nombre es requerido').not().isEmpty(),
-    check('estado', 'Estado inválido').isIn(['Activo', 'Inactivo']),
+    check('estado', 'Estado es requerido').isIn(['Activo', 'Inactivo']),
 
 ], async function(req, res) {
     try {
@@ -49,7 +49,7 @@ router.post('/', [
 
 router.put('/:directorId', [
     check('nombre', 'Nombre es requerido').not().isEmpty(),
-    check('estado', 'Estado inválido').isIn(['Activo', 'Inactivo']),
+    check('estado', 'Estado es requerido').isIn(['Activo', 'Inactivo']),
 ], async function(req, res) {
     try {
    

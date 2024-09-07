@@ -5,9 +5,9 @@ const {Schema, model } = require('mongoose');
 const mediaSchema = new Schema({
     serial: {type: Number, require: true, unique: true },
     titulo: {type: String, required:true},
-    sipnosis: {type: String, required:true, unique: true},
+    sinopsis: {type: String, required:true},
     url: {type: String, required:true, },
-    imagen: {type: String},
+    imagen: {type: String, require:true},
     fechaCreacion: {type: Date, default: Date.now},
     fechaActualizacion: {type: Date, default: Date.now},
     añoEstreno: {type: Number},
