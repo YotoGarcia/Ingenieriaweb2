@@ -9,23 +9,15 @@ const router = Router();
 router.get('/', async function(req, res){
     try{
         const media = await Media.find().populate([
-            {
-                path:'director', select: 'nombre estado'
-            },
-            {
-                path:'genero', select: 'nombre estado'
-            },
-            {
-                path: 'productora', select: 'nombre estado'
-            },
-            {
-                path: 'tipo', select: 'nombre descripcion'
-            }
+            {path:'director', select: 'nombre estado'},
+            {path:'genero', select: 'nombre estado'},
+            {path: 'productora', select: 'nombre estado'},
+            {path: 'tipo', select: 'nombre descripcion'}
         ]);
         res.status(200).json(media);
     } catch(error){
         console.log('Error al obtener Media', error);
-        res.status(500).send('ocuarrio un error')
+        res.status(500).send('ocurrio un error')
     }
 });
 
@@ -62,10 +54,10 @@ router.post('/',[
         media.sinopsis = req.body.sinopsis;
         media.url = req.body.url;
         media.imagen = req.body.imagen;
-        media.genero = req.body.genero._id;
-        media.director = req.body.director._id;
-        media.productora = req.body.productora._id;
-        media.tipo = req.body.tipo._id;
+        media.genero = req.body.genero;
+        media.director = req.body.director;
+        media.productora = req.body.productora;
+        media.tipo = req.body.tipo;
         media.fechaCreacion = new Date();
         media.fechaActualizacion = new Date();
 
@@ -118,10 +110,10 @@ router.put('/:mediaId',[
         media.sinopsis = req.body.sinopsis;
         media.url = req.body.url;
         media.imagen = req.body.imagen;
-        media.genero = req.body.genero._id;
-        media.director = req.body.director._id;
-        media.productora = req.body.productora._id;
-        media.tipo = req.body.tipo._id;
+        media.genero = req.body.genero;
+        media.director = req.body.director;
+        media.productora = req.body.productora;
+        media.tipo = req.body.tipo;
         media.fechaActualizacion = new Date();
 
         
