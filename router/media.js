@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const Media = require ('../models/Media.js');
 const {validationResult, check} = require('express-validator');
-const { log } = require('console');
+
 
 const router = Router();
 
@@ -89,23 +89,25 @@ router.put('/:mediaId',[
 
 ], async function(req, res) {
     try {
-
         const errors = validationResult(req);
-        if(!errors.isEmpty()){
-            return res.status(400).json({mensaje: errors.array()})
-
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ mensaje: errors.array() });
         }
 
-        let media =await Media.findById(req.params.mediaId);
-        if(!media){
-            return res.status(400).send('Media no existe')
+        let media = await Media.findById(req.params.mediaId);
+        if (!media) {
+            return res.status(404).send('Media no existe');
         }
 
-        const existeMediaPorSerial = await Media.findOne({serial: req.body.serial, id: { $ne: media._id}});
-        if(existeMediaPorSerial){
+        const existeMediaPorSerial = await Media.findOne({
+            serial: req.body.serial,
+            _id: { $ne: media._id } 
+        });
+        if (existeMediaPorSerial) {
             return res.status(400).send("Ya existe este serial");
         }
 
+       
         media.serial = req.body.serial;
         media.titulo = req.body.titulo;
         media.sinopsis = req.body.sinopsis;
@@ -117,15 +119,12 @@ router.put('/:mediaId',[
         media.tipo = req.body.tipo;
         media.fechaActualizacion = new Date();
 
-        
         media = await media.save();
         res.send(media);
-
-    } catch(error){
+    } catch (error) {
         console.log(error);
-        res.status(500).send('Ocurrio un error al actualizar Media')
+        res.status(500).send('Ocurrio un error al actualizar Media');
     }
-    
 });
 
 //Metodo Eliminar 
