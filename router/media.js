@@ -1,6 +1,7 @@
 const {Router} = require('express');
 const Media = require ('../models/Media.js');
 const {validationResult, check} = require('express-validator');
+const { log } = require('console');
 
 const router = Router();
 
@@ -144,5 +145,31 @@ router.put('/:mediaId',[
         res.sendStatus(500).send('Ocurrio un error al eliminar Media');
     }
  });
+
+    
+ router.get('/:mediaId', async function (req, res) {
+    const { mediaId } = req.params;
+
+    try {
+        
+        if (!mediaId.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).json({ message: 'ID inválido' });
+        }
+
+        
+        const media = await Media.findById(mediaId);
+
+        
+        if (!media) {
+            return res.status(404).json({ message: 'Media no existe' });
+        }
+
+        
+        res.json(media);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Ocurrió un error al consultar media' });
+    }
+});
 
 module.exports = router;
